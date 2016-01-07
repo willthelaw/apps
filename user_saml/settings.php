@@ -56,14 +56,14 @@ foreach ($params as $param) {
 }
 
 // settings with default values
-$tmpl->assign( 'saml_ssp_path', OCP\Config::getAppValue('user_saml', 'saml_ssp_path', '/var/www/sp/simplesamlphp'));
+$tmpl->assign( 'saml_ssp_path', OCP\Config::getAppValue('user_saml', 'saml_ssp_path', '/usr/share/simplesamlphp'));
 $tmpl->assign( 'saml_sp_source', OCP\Config::getAppValue('user_saml', 'saml_sp_source', 'default-sp'));
 $tmpl->assign( 'saml_force_saml_login', OCP\Config::getAppValue('user_saml', 'saml_force_saml_login', 0));
 $tmpl->assign( 'saml_autocreate', OCP\Config::getAppValue('user_saml', 'saml_autocreate', 0));
 $tmpl->assign( 'saml_update_user_data', OCP\Config::getAppValue('user_saml', 'saml_update_user_data', 0));
 $tmpl->assign( 'saml_protected_groups', OCP\Config::getAppValue('user_saml', 'saml_protected_groups', ''));
 $tmpl->assign( 'saml_default_group', OCP\Config::getAppValue('user_saml', 'saml_default_group', ''));
-$tmpl->assign( 'saml_username_mapping', OCP\Config::getAppValue('user_saml', 'saml_username_mapping', 'uid'));
+$tmpl->assign( 'saml_username_mapping', OCP\Config::getAppValue('user_saml', 'saml_username_mapping', 'eduPersonPrincipalName'));
 $tmpl->assign( 'saml_email_mapping', OCP\Config::getAppValue('user_saml', 'saml_email_mapping', 'mail'));
 $tmpl->assign( 'saml_displayname_mapping', OCP\Config::getAppValue('user_saml', 'saml_displayname_mapping', 'displayName'));
 $tmpl->assign( 'saml_quota_mapping', OCP\Config::getAppValue('user_saml', 'saml_quota_mapping', ''));

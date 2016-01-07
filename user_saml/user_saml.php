@@ -56,14 +56,18 @@ class OC_USER_SAML extends OC_User_Backend {
 		$this->groupMapping = explode (',', preg_replace('/\s+/', '', OCP\Config::getAppValue('user_saml', 'saml_group_mapping', '')));
 
 		if (!empty($this->sspPath) && !empty($this->spSource)) {
-			include_once $this->sspPath."/lib/_autoload.php";
-
-			$this->auth = new SimpleSAML_Auth_Simple($this->spSource);
-
-			if (isset($_COOKIE["user_saml_logged_in"]) AND $_COOKIE["user_saml_logged_in"] AND !$this->auth->isAuthenticated()) {
-				unset($_COOKIE["user_saml_logged_in"]);
-				setcookie("user_saml_logged_in", null, -1);
-				OCP\User::logout();
+			#add a tiny bit of debugging if the simplesamlphp stuff doesn't exist
+			if (file_exists($this->sspPath."/lib/_autoload.php")) {
+				include_once $this->sspPath . "/lib/_autoload.php"; 
+				$this->auth = new SimpleSAML_Auth_Simple($this->spSource);
+			
+				if (isset($_COOKIE["user_saml_logged_in"]) AND $_COOKIE["user_saml_logged_in"] AND !$this->auth->isAuthenticated()) {
+					unset($_COOKIE["user_saml_logged_in"]);
+					setcookie("user_saml_logged_in", null, -1);
+					OCP\User::logout();
+				}
+			} else {
+				OCP\Util::writeLog('saml',"issue with simpleSAMLphp path ".$this->sspPath.", change SimpleSAMLphp path", OCP\Util::ERROR);
 			}
 		}
 	}
@@ -88,7 +92,7 @@ class OC_USER_SAML extends OC_User_Backend {
 			}
 		}
 
-		OC_Log::write('saml','Not found attribute used to get the username at the requested saml attribute assertion',OC_Log::DEBUG);
+		OCP\Util::writeLog('saml','Not found attribute used to get the username at the requested saml attribute assertion',OCP\Util::DEBUG);
 		$secure_cookie = OC_Config::getValue("forcessl", false);
 		$expires = time() + OC_Config::getValue('remember_login_cookie_lifetime', 60*60*24*15);
 		setcookie("user_saml_logged_in", "1", $expires, '', '', $secure_cookie);
